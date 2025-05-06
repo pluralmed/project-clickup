@@ -31,6 +31,7 @@ export interface ClickUpResponse {
 }
 
 export interface FormattedTask {
+  id?: string;
   date_created: string;
   badge: string | null;
   name: string;

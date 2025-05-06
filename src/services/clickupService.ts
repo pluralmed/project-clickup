@@ -177,6 +177,7 @@ const formatTask = (task: Task): FormattedTask => {
   const cargoPretendido = getCargoFieldValue(task);
   
   return {
+    id: task.id,
     date_created: formatDate(task.date_created),
     badge: cargoPretendido,
     name: task.name,

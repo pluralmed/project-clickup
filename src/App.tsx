@@ -5,6 +5,7 @@ import { fetchAllTasks } from './services/clickupService';
 import { FormattedTask } from './types/clickup';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
+import AuthGuard from './components/AuthGuard';
 import * as XLSX from 'xlsx';
 import { Search, Calendar, ClipboardList, BadgeCheck } from 'lucide-react';
 
@@ -109,7 +110,7 @@ function App() {
     return nameMatch && formMatch && dateMatch && cargoMatch;
   });
 
-  return (
+  const appContent = (
     <div className="min-h-screen bg-gray-50">
       <Header onRefresh={handleRefresh} onExportCSV={handleExportExcel} />
       
@@ -184,6 +185,12 @@ function App() {
         <p>Fonte: ClickUp</p>
       </footer>
     </div>
+  );
+
+  return (
+    <AuthGuard>
+      {appContent}
+    </AuthGuard>
   );
 }
 
