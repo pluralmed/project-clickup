@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { getCurrentUser, signOut } from '../services/supabaseService';
+import { getCurrentUser, signOut, getSession } from '../services/supabaseService';
 
 interface AuthContextType {
   user: any | null;
@@ -29,23 +29,36 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const refreshUser = async () => {
     try {
       setLoading(true);
-      const currentUser = await getCurrentUser();
-      setUser(currentUser);
+      // Primeiro verificar se há uma sessão ativa
+      const session = await getSession();
+      
+      if (session) {
+        const currentUser = await getCurrentUser();
+        setUser(currentUser);
+      } else {
+        // Se não há sessão, garantir que o usuário seja null
+        setUser(null);
+      }
     } catch (error) {
       console.error('Erro ao verificar usuário:', error);
+      // Em caso de erro, garantir que o usuário seja null
+      setUser(null);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
+    console.log('AuthProvider: iniciando verificação de usuário');
     refreshUser();
   }, []);
 
   const handleLogout = async () => {
     try {
+      console.log('Iniciando logout');
       await signOut();
       setUser(null);
+      console.log('Logout realizado com sucesso, recarregando página');
       // Forçar um reload da página para garantir que tudo seja reinicializado
       window.location.reload();
     } catch (error) {

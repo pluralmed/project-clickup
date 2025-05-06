@@ -6,11 +6,12 @@ import { FormattedTask } from './types/clickup';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
 import AuthGuard from './components/AuthGuard';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import * as XLSX from 'xlsx';
 import { Search, Calendar, ClipboardList, BadgeCheck } from 'lucide-react';
 
-function App() {
+// Componente que só será renderizado quando o usuário estiver autenticado
+const AuthenticatedApp = () => {
   const [tasks, setTasks] = useState<FormattedTask[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -35,6 +36,8 @@ function App() {
   };
 
   useEffect(() => {
+    // Agora só carrega os dados quando este componente for montado
+    // E este componente só é montado quando o usuário estiver autenticado
     loadTasks();
   }, []);
 
@@ -111,7 +114,7 @@ function App() {
     return nameMatch && formMatch && dateMatch && cargoMatch;
   });
 
-  const appContent = (
+  return (
     <div className="min-h-screen bg-gray-50">
       <Header onRefresh={handleRefresh} onExportCSV={handleExportExcel} />
       
@@ -187,11 +190,13 @@ function App() {
       </footer>
     </div>
   );
+};
 
+function App() {
   return (
     <AuthProvider>
       <AuthGuard>
-        {appContent}
+        <AuthenticatedApp />
       </AuthGuard>
     </AuthProvider>
   );

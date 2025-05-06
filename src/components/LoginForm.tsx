@@ -18,9 +18,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
     setLoading(true);
 
     try {
-      await signInWithEmail(email, password);
+      console.log('LoginForm: Tentando fazer login com email:', email);
+      const result = await signInWithEmail(email, password);
+      console.log('LoginForm: Login bem-sucedido, dados do usuário recebidos');
       onSuccess();
     } catch (err) {
+      console.error('LoginForm: Erro ao fazer login:', err);
       setError(err instanceof Error ? err.message : 'Erro ao fazer login');
     } finally {
       setLoading(false);
