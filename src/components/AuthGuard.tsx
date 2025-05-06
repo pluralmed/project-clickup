@@ -1,56 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { getCurrentUser, signOut } from '../services/supabaseService';
+import React from 'react';
 import LoginForm from './LoginForm';
+import { useAuth } from '../contexts/AuthContext';
 
 interface AuthGuardProps {
   children: React.ReactNode;
 }
 
-// Exportando o usuário para utilização em outros componentes
-export const useCurrentUser = () => {
-  const [user, setUser] = useState<any | null>(null);
-  
-  const checkUser = async () => {
-    try {
-      const currentUser = await getCurrentUser();
-      setUser(currentUser);
-    } catch (error) {
-      console.error('Erro ao verificar usuário:', error);
-    }
-  };
-
-  useEffect(() => {
-    checkUser();
-  }, []);
-
-  const handleLogout = async () => {
-    try {
-      await signOut();
-      setUser(null);
-    } catch (error) {
-      console.error('Erro ao fazer logout:', error);
-    }
-  };
-
-  return { user, checkUser, handleLogout };
-};
-
 const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
-  const { user, checkUser, handleLogout } = useCurrentUser();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadUser = async () => {
-      setLoading(true);
-      await checkUser();
-      setLoading(false);
-    };
-    
-    loadUser();
-  }, []);
+  const { user, loading, refreshUser } = useAuth();
 
   const handleLogin = () => {
-    checkUser();
+    refreshUser();
   };
 
   if (loading) {

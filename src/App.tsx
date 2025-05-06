@@ -6,6 +6,7 @@ import { FormattedTask } from './types/clickup';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
 import AuthGuard from './components/AuthGuard';
+import { AuthProvider } from './contexts/AuthContext';
 import * as XLSX from 'xlsx';
 import { Search, Calendar, ClipboardList, BadgeCheck } from 'lucide-react';
 
@@ -188,9 +189,11 @@ function App() {
   );
 
   return (
-    <AuthGuard>
-      {appContent}
-    </AuthGuard>
+    <AuthProvider>
+      <AuthGuard>
+        {appContent}
+      </AuthGuard>
+    </AuthProvider>
   );
 }
 

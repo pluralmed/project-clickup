@@ -1,6 +1,6 @@
 import React from 'react';
 import { RefreshCw, Download, LogOut } from 'lucide-react';
-import { useCurrentUser } from './AuthGuard';
+import { useAuth } from '../contexts/AuthContext';
 
 interface HeaderProps {
   onRefresh: () => void;
@@ -8,7 +8,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onRefresh, onExportCSV }) => {
-  const { user, handleLogout } = useCurrentUser();
+  const { user, handleLogout } = useAuth();
 
   return (
     <header className="bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg">
